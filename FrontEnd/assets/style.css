@@ -186,3 +186,41 @@ footer nav ul {
 	margin: 2em
 }
 
+.categories{
+	display: flex;
+	justify-content: center;
+	margin: 20px auto;
+}
+
+.categories .btn{
+	text-decoration: none;
+	min-width: 100px;
+	height: 33px;
+	border: 2px #1D6154 solid;
+	border-radius: 19px;
+	margin: 0 5px;
+}
+
+.categories .btn:hover{
+	background-color: #508a7f;
+}
+
+.categories .btn:hover p{
+	color: white;
+}
+
+.categories .btn p{
+	font-weight: bold;
+	text-align: center;
+	color: #1D6154;
+	font-size: 16px;
+	margin: auto 10px;
+}
+
+.categories .main, .categories .main:hover{
+	background-color: #1D6154;
+}
+
+.categories .main p{
+	color: white;
+}
