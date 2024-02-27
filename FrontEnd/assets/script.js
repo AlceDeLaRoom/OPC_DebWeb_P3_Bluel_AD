@@ -36,12 +36,11 @@ function addBtn(categorie, mainBtn = ""){
 /* show one kind of stuff */
 
 /* show all */
-
 const gallery = document.querySelector(".gallery");
 
 let categories = await apiControler("categories");
-gallery.appendChild(addButtonCategories(categories));
-console.log(gallery);
+gallery.parentNode.insertBefore(addButtonCategories(categories), gallery.nextSibling);
+
 
 let works = await apiControler("works");
 

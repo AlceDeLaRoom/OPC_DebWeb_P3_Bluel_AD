@@ -186,10 +186,12 @@ footer nav ul {
 	margin: 2em
 }
 
+
+/* pas aligné à cause de grid */
 .categories{
 	display: flex;
 	justify-content: center;
-	margin: 20px auto;
+	margin: 20px;
 }
 
 .categories .btn{
@@ -205,16 +207,16 @@ footer nav ul {
 	background-color: #508a7f;
 }
 
-.categories .btn:hover p{
-	color: white;
-}
-
 .categories .btn p{
 	font-weight: bold;
 	text-align: center;
 	color: #1D6154;
 	font-size: 16px;
-	margin: auto 10px;
+	margin: 8px 10px;
+}
+
+.categories .btn:hover p{
+	color: white;
 }
 
 .categories .main, .categories .main:hover{
