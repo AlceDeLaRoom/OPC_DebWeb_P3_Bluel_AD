@@ -26,20 +26,42 @@ function addBtn(categorie, mainBtn = ""){
     btnCat.href = "#";
     const txtBtn = document.createElement("p");
     txtBtn.innerHTML = categorie;
-    btnCat.appendChild(txtBtn); 
+    btnCat.appendChild(txtBtn);
+    btnCat.addEventListener("click", function(){/main/.test(btnCat.className)? console.log("Already load!"):clicCat(btnCat)});
     return btnCat;
 };
 
+function clicCat(btn){
+    gallery.innerHTML = '';
+    showWorks(btn.firstChild.innerHTML);
+    const oldBtn = document.querySelector(".main");
+    oldBtn.className = "btn";
+    btn.className += " main";
+};
 
-
-
-/* show one kind of stuff */
+/* show work "Tous" for all */
+function showWorks(categorie){
+    if (/Tous/.test(categorie)) {
+        console.log("on affiche tout!")
+        for (const cat of categories){
+            showWorks(cat["name"]);
+        }
+    }
+    else{
+        console.log("on affiche ", categorie)
+        for (const work of works){
+            /*if (categorie == work[]){
+                
+            }*/
+        }
+    };
+}
 
 /* show all */
 const gallery = document.querySelector(".gallery");
 
 let categories = await apiControler("categories");
-gallery.parentNode.insertBefore(addButtonCategories(categories), gallery.nextSibling);
+gallery.parentNode.insertBefore(addButtonCategories(categories), gallery.previousSibling);
 
 
 let works = await apiControler("works");
