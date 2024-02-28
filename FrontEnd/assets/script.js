@@ -38,8 +38,8 @@ function clicCat(btn){
     btn.className += " selected";
 };
 
-/* show work "Tous" for all */
-function showWorks(category){
+/* show work, category = "Tous" for all, don't forget to clean up gallery */
+function showWorks(category = "Tous"){
     if (/Tous/.test(category)) {
         console.log("on affiche tout!")
         for (const cat of categories){
@@ -80,6 +80,6 @@ gallery.parentNode.insertBefore(addButtonCategories(categories), gallery.previou
 
 let works = await apiControler("works");
 
-showWorks("Tous")
+showWorks();
 
 

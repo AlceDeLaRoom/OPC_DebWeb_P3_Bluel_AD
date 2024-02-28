@@ -16,17 +16,22 @@
 	<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
 	<nav>
 		<ul>
-			<li>projets</li>
-			<li>contact</li>
-			<li>login</li>
+			<li>
+				<a href="./index.html">projets</a></li>
+			<li>
+				<a href="#">contact</a>
+			</li>
+			<li>
+				<a href="./login.html" class="selected">login</a>
+			</li>
 			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
 		</ul>
 	</nav>
 </header>
 <main>
 	<section id="login" class="formulaire">
+		<h2>Log</h2>
         <form method="post" action="http://localhost:5678/api/users/login">
-            <h2>Log</h2>
             <label for="email" >E-mail</label>
             <input type="email" name="email" id="email" autofocus required/>
             <label for="password" >Mot de passe</label>
