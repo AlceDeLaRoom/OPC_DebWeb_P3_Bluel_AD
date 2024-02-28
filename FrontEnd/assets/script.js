@@ -13,44 +13,44 @@ async function apiControler(urlEnd = "") {
 function addButtonCategories(categories){
     const categoriesDiv = document.createElement("div");
 	categoriesDiv.className = "categories";
-    categoriesDiv.appendChild(addBtn("Tous", " main"));
-    for (const categorie of categories){
-        categoriesDiv.appendChild(addBtn(categorie.name));
+    categoriesDiv.appendChild(addBtn("Tous", " selected"));
+    for (const category of categories){
+        categoriesDiv.appendChild(addBtn(category.name));
     };
     return categoriesDiv;
 };
 
-function addBtn(categorie, mainBtn = ""){
+function addBtn(categorie, selectedBtn = ""){
     const btnCat = document.createElement("a");
-    btnCat.className = "btn" + mainBtn;
+    btnCat.className = "btn" + selectedBtn;
     const txtBtn = document.createElement("p");
     txtBtn.innerHTML = categorie;
     btnCat.appendChild(txtBtn);
-    btnCat.addEventListener("click", function(){/main/.test(btnCat.className)? console.log("Already load!"):clicCat(btnCat)});
+    btnCat.addEventListener("click", function(){/selected/.test(btnCat.className)? console.log("Already selected!"):clicCat(btnCat)});
     return btnCat;
 };
 
 function clicCat(btn){
     gallery.innerHTML = '';
     showWorks(btn.firstChild.innerHTML);
-    const oldBtn = document.querySelector(".main");
+    const oldBtn = gallery.parentNode.querySelector(".selected");
     oldBtn.className = "btn";
-    btn.className += " main";
+    btn.className += " selected";
 };
 
 /* show work "Tous" for all */
-function showWorks(categorie){
-    if (/Tous/.test(categorie)) {
+function showWorks(category){
+    if (/Tous/.test(category)) {
         console.log("on affiche tout!")
         for (const cat of categories){
             showWorks(cat.name);
         }
     }
     else{
-        categorie = categorie.replace(/&amp;/g,"&");
-        console.log("on affiche ", categorie)
+        category = category.replace(/&amp;/g,"&");
+        console.log("on affiche ", category)
         for (const work of works){
-            if (RegExp(categorie).test(work.category.name)){
+            if (RegExp(category).test(work.category.name)){
                 
                 gallery.appendChild(showOnework(work));
             };
