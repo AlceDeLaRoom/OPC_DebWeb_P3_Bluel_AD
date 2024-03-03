@@ -9,7 +9,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
-	<script type="module" src="./assets/script.js"></script>
+	<script type="module" src="./assets/login.js"></script>
 </head>
 <body>
 <header>
@@ -31,12 +31,12 @@
 <main>
 	<section id="login" class="formulaire">
 		<h2>Log</h2>
-        <form method="post" action="http://localhost:5678/api/users/login">
+        <form id="form">
             <label for="email" >E-mail</label>
             <input type="email" name="email" id="email" autofocus required/>
             <label for="password" >Mot de passe</label>
             <input type="password" name="password" id="password" autofocus required/>
-            <input type="submit" value="Envoyer" action="./index.html" />
+            <input type="submit" value="Envoyer" />
         </form>
     </section>
 </main>

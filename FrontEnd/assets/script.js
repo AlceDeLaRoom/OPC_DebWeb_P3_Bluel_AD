@@ -1,13 +1,17 @@
-
-
 /* get/post/delete api */
-async function apiControler(urlEnd = "") {
-    console.log(urlEnd)
-    const response = await fetch("http://localhost:5678/api/" + urlEnd, {});
+async function apiGet() {
+    const response = await fetch("http://localhost:5678/api/works", {});
     let data = await response.json();
-    console.log ("données récupérées: ", data)
+    // console.log ("données récupérées: ", data)
     return data;
 };
+
+async function apiGetCategory(){
+    const response = await fetch("http://localhost:5678/api/categories", {});
+    let data = await response.json();
+    // console.log ("données récupérées: ", data)
+    return data;
+}
 
 /* add categories's buttons */
 function addButtonCategories(categories){
@@ -21,7 +25,7 @@ function addButtonCategories(categories){
 };
 
 function addBtn(categorie, selectedBtn = ""){
-    const btnCat = document.createElement("a");
+    const btnCat = document.createElement("div");
     btnCat.className = "btn" + selectedBtn;
     const txtBtn = document.createElement("p");
     txtBtn.innerHTML = categorie;
@@ -39,47 +43,64 @@ function clicCat(btn){
 };
 
 /* show work, category = "Tous" for all, don't forget to clean up gallery */
-function showWorks(category = "Tous"){
+function showWorks(category = "Tous" , contenor = gallery){
     if (/Tous/.test(category)) {
         console.log("on affiche tout!")
         for (const cat of categories){
-            showWorks(cat.name);
+            showWorks(cat.name, contenor);
         }
     }
     else{
         category = category.replace(/&amp;/g,"&");
-        console.log("on affiche ", category)
+        console.log("on affiche ", category, "dans ", contenor)
+        const title = RegExp("delete").test(contenor.className)? false : true;
         for (const work of works){
             if (RegExp(category).test(work.category.name)){
-                
-                gallery.appendChild(showOnework(work));
+                contenor.appendChild(showOnework(work, title));
             };
         };
     };
 }
 
-function showOnework(work){
+function showOnework(work, title = true){
     console.log("Add work: ", work.title)
-    const newWork = document.createElement("figure");
+    const newWork = document.createElement("div");
+    newWork.className = "work";
     const img = document.createElement("img");
-    const figcaption = document.createElement("figcaption");
     img.src = work.imageUrl;
     img.alt = work.title;
-    figcaption.innerHTML = work.title;
-
     newWork.appendChild(img);
-    newWork.appendChild(figcaption);
+
+    if (title){
+        const imgTitle = document.createElement("p");
+        imgTitle.innerHTML = work.title;
+        newWork.appendChild(imgTitle);
+    }
+    else{
+        const btnIcon = document.createElement("div");
+        btnIcon.className = "btnTrashCan";
+        newWork.appendChild(btnIcon);
+        const icon = document.createElement("i");
+        icon.className = "fa-solid fa-trash-can";
+        btnIcon.appendChild(icon);
+    };
+
     return newWork;
 }
 
-/* show all */
-const gallery = document.querySelector(".gallery");
 
-let categories = await apiControler("categories");
+const gallery = document.querySelector(".gallery");
+const deleteGallery = document.querySelector(".delete-gallery");
+
+let categories = await apiGetCategory();
 gallery.parentNode.insertBefore(addButtonCategories(categories), gallery.previousSibling);
 
-let works = await apiControler("works");
+let works = await apiGet();
 
 showWorks();
+showWorks("Tous", deleteGallery);
 
 
+
+console.log(localStorage.getItem("token"));
+// Supprimer le token du localStorage localStorage.removeItem("token");
