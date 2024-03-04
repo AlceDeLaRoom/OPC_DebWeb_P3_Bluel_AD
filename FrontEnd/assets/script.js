@@ -1,5 +1,25 @@
 const TOKEN = JSON.parse(localStorage.getItem("token")).token;
-console.log(TOKEN);
+const AUTH = await apiAuth()
+if (AUTH) {
+    console.log("editionMode()")
+};
+
+/* verify the token */
+async function apiAuth() {
+    let auth = false;
+    await fetch("http://localhost:5678/api/users/auth", {
+        headers: {
+            'Authorization': "Bearer " + TOKEN
+        }
+    })
+    .then((response) => response.json())
+    .then((data) => {auth = data.auth})
+    .catch((error) => {
+        console.error(error);
+    });
+    return auth;
+}
+
 /* get/post/delete api */
 async function apiGet() {
     const response = await fetch("http://localhost:5678/api/works", {});

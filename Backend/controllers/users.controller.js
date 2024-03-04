@@ -45,3 +45,9 @@ exports.login = async (req, res) => {
 
 	}
 }
+
+exports.auth = async (req, res) => {
+	return res.status(200).json({
+		message: 'auth successfull',
+		auth: true})
+}
