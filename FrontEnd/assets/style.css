@@ -4,11 +4,11 @@ body {
 	font-family: 'Work Sans' ;
 	font-size: 14px;
 }
-header {
-	display: flex;
-	justify-content: space-between;
-	margin: 50px 0
+
+main{
+	margin: 0 150px;
 }
+
 section {
 	margin: 50px 0
 }
@@ -26,7 +26,7 @@ h1 > span {
 	font-family: 'Work Sans';
 	font-size:10px;
 	letter-spacing: 0.1em;
-;
+	;
 }
 
 h2{
@@ -39,7 +39,7 @@ nav ul {
 	display: flex;
 	align-items: center;
 	list-style-type: none;
-
+	
 }
 nav li {
 	padding: 0 10px;
@@ -113,6 +113,34 @@ input[type="submit"]{
 	cursor: pointer;
 }
 
+/* headder */
+
+.edition-banner {
+	height: 60px;
+	background-color: black;
+	display: none;
+	justify-content: center;
+}
+
+.edition-banner * {
+	color: white;
+	font-size: 16px;
+	margin: auto 10px;
+}
+
+.original-header {
+	display: flex;
+	justify-content: space-between;
+	margin: 30px 150px;
+}
+
+.loginBtn{
+	display: block;
+}
+.logoutBtn{
+	display: none;
+}
+
 #introduction {
 	display: flex;
 	align-items: center;
@@ -136,10 +164,6 @@ input[type="submit"]{
 #introduction p {
 	margin-bottom: 0.5em;
 }
-#portfolio h2 {
-	text-align: center;
-	margin-bottom: 1em;
-}
 
 /**** filtres ****/
 .categories{
@@ -149,24 +173,16 @@ input[type="submit"]{
 }
 
 .categories .btn{
-	min-width: 100px;
-	height: 33px;
-	border: 2px #1D6154 solid;
-	border-radius: 19px;
+	background-color: white !important; 
 	margin: 0 5px;
-	cursor: pointer;
 }
 
 .categories .btn:hover{
-	background-color: #508a7f;
+	background-color: #508a7f !important;
 }
 
 .categories .btn p{
-	font-weight: bold;
-	text-align: center;
 	color: #1D6154;
-	font-size: 16px;
-	margin: 8px 10px;
 }
 
 .categories .btn:hover p{
@@ -174,11 +190,43 @@ input[type="submit"]{
 }
 
 .categories .selected, .categories .selected:hover{
-	background-color: #1D6154;
+	background-color: #1D6154 !important;
 }
 
 .categories .selected p{
 	color: white;
+}
+
+/* portfolio */
+
+#portfolio h2 {
+
+	margin-left: calc(50% - 96px);
+	margin-bottom: 1em;
+}
+
+.portfolio-title{
+	display: flex;
+}
+
+.editBtn{
+	align-self: center;
+	display: none;
+	cursor: pointer;
+	height: 20px;
+	margin-left: 10px;
+}
+.editBtn:hover{
+	color:grey;
+}
+.editBtn p{
+	font-size: 14px;
+	margin: auto;
+}
+
+.editBtn i{
+	font-size: 16px;
+	margin: auto 5px;
 }
 
 .gallery {
@@ -206,7 +254,7 @@ footer nav ul {
 	height: calc(100vh + 50px);
 	position: fixed;
 	z-index: 100;
-	display: flex;
+	display: none;
 	align-items: center;
 	justify-content: center;
 	background-color: rgba(0, 0, 0, 0.5);
@@ -216,8 +264,8 @@ footer nav ul {
 	background-color: white;
 	padding: 26px 30px;
 	border-radius: 10px;
-	width: 630px;
-	height: 688px;
+	width: 570px;
+	height: 636px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -281,16 +329,13 @@ footer nav ul {
 	background-color: black;
 	width: 17px;
 	height: 17px;
-	background-color: black;
 	border-radius: 2px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
 	cursor: pointer;
 }
 
 .btnTrashCan i {
-	margin-top: 2px;
+	text-align: center;
+	margin: auto 3px;
 	font-size: 12px;
 	color: white;
 }
@@ -302,10 +347,10 @@ footer nav ul {
 
 .btn{
 	min-width: 100px;
-	height: 33px;
+	height: 34px;
 	border: 2px #1D6154 solid;
 	background-color: #1D6154;
-	border-radius: 19px;
+	border-radius: 20px;
 	cursor: pointer;
 }
 

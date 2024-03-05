@@ -1,8 +1,11 @@
-const TOKEN = JSON.parse(localStorage.getItem("token")).token;
+
+let TOKEN = '';
+try {
+    TOKEN = JSON.parse(localStorage.getItem("token")).token;
+} catch(error){console.log(error)};
+
 const AUTH = await apiAuth()
-if (AUTH) {
-    console.log("editionMode()")
-};
+let EDITMODE = false;
 
 /* verify the token */
 async function apiAuth() {
@@ -20,7 +23,6 @@ async function apiAuth() {
     return auth;
 }
 
-/* get/post/delete api */
 async function apiGet() {
     const response = await fetch("http://localhost:5678/api/works", {});
     let data = await response.json();
@@ -33,18 +35,41 @@ async function apiGetCategory(){
     let data = await response.json();
     // console.log ("données récupérées: ", data)
     return data;
-}
+};
 
 async function apiDelete(id){
-    console.log("delete");
     await fetch('http://localhost:5678/api/works/'+id, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': "Bearer " + TOKEN
         }
-    }).catch((error)=>{console.error(error)})
-}
+    })
+    console.log("delete API")
+    
+};
+
+function logIn(){
+    document.querySelector(".loginBtn").style.display = "none";
+    document.querySelector(".categories").style.display = "none";
+    document.querySelector(".logoutBtn").style.display = "block";
+    document.querySelector(".edition-banner").style.display = "flex";
+    document.querySelector(".editBtn").style.display = "flex";
+};
+
+function logOut(){
+    document.querySelector(".loginBtn").style.display = "block";
+    document.querySelector(".categories").style.display = "flex";
+    document.querySelector(".logoutBtn").style.display = "none";
+    document.querySelector(".edition-banner").style.display = "none";
+    document.querySelector(".editBtn").style.display = "none";
+    localStorage.removeItem("token");
+};
+
+function editionMode(){
+    EDITMODE = EDITMODE? false : true;
+    document.querySelector(".modale").style.display = EDITMODE?"flex":"none";
+};
 
 /* add categories's buttons */
 function addButtonCategories(categories){
@@ -122,10 +147,10 @@ function showOnework(work, title = true){
     return newWork;
 }
 
-async function deleteWork(id){
-    await apiDelete(id)
-    .then(refreshWorks())
-    .catch((error)=>{console.log(error)});
+function deleteWork(id){
+    apiDelete(id)
+    refreshWorks()
+    console.log("coucou")
 }
 
 function refreshWorks(){
@@ -141,6 +166,10 @@ function loadWorks(){
 }
 
 
+document.querySelector('.x-mark').addEventListener("click", ()=>{editionMode()});
+document.querySelector('.editBtn').addEventListener("click", ()=>{editionMode()});
+document.querySelector('.logoutBtn').addEventListener("click", ()=>{logOut()});
+
 const gallery = document.querySelector(".gallery");
 const deleteGallery = document.querySelector(".delete-gallery");
 
@@ -150,5 +179,4 @@ gallery.parentNode.insertBefore(addButtonCategories(categories), gallery.previou
 let works = await apiGet();
 
 loadWorks();
-
-// Supprimer le token du localStorage localStorage.removeItem("token");
+if (AUTH) {logIn();};
