@@ -15,9 +15,10 @@
 	<script type="module" src="./assets/script.js"></script>
 </head>
 <body>
-	<section class="modale">
+	<div class="modale">
 		<div class="edit-window">
-			<div class="x-mark">
+			<div class="edit-window-btn">
+				<i class="fa-solid fa-arrow-left"></i>
 				<i class="fa-solid fa-xmark"></i>
 			</div>
 			<div class="delete-mode">
@@ -29,8 +30,30 @@
 					<p>Ajouter une image</p>
 				</div>
 			</div>
+			<div class="add-mode formulaire">
+				<h3>Ajout photo</h3>
+				<form action="#" method="post">
+					<label for="file" class="file">
+						<i class="fa-regular fa-image"></i>
+						<div class="btn">
+							<p>+ Ajouter photo</p>
+						</div>
+						<p>jpg, png: 4mo max</p>
+					</label>
+					<input type="file" name="file" id="file" required>
+					<label for="title">Titre</label>
+					<input type="text" name="title" id="title" required>
+					<label for="category">Categorie</label>
+					<select name="category" id="category">
+						<option value="1">Objets</option>
+						<option value="2">Appartements</option>
+						<option value="3">Hotels & restaurants</option>
+					</select>
+					<input type="submit" value="Valider">
+				</form>
+			</div>
 		</div>
-	</section>
+	</div>
 <header>
 	<div class = "edition-banner">
 		<i class="fa-regular fa-pen-to-square"></i>

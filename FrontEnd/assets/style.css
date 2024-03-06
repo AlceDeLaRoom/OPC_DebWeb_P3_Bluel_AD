@@ -1,5 +1,6 @@
 body {
 	max-width: 1140px;
+	min-width: 1024px;
 	margin:auto;
 	font-family: 'Work Sans' ;
 	font-size: 14px;
@@ -35,6 +36,7 @@ h2{
 	font-size: 30px;
 	color: #1D6154
 }
+
 nav ul {
 	display: flex;
 	align-items: center;
@@ -57,60 +59,6 @@ nav li .selected{
 
 li a:hover {
 	color: #B1663C;
-}
-
-/**** form login & contact****/
-
-#login{
-	margin-top: 150px;
-}
-
-.formulaire {
-	width: 33%;
-	margin: auto;
-}
-
-.formulaire > * {
-	text-align: center;
-}
-
-.formulaire h2 {
-	margin-bottom: 20px;
-}
-
-.formulaire form {
-	text-align: left;
-	margin-top: 30px;
-	display: flex;
-	flex-direction: column;
-}
-
-.formulaire input {
-	height: 50px;
-	font-size: 1.2em;
-	border: none;
-	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-}
-
-.formulaire label {
-	margin: 2em 0 1em 0;
-}
-
-.formulaire textarea {
-	border: none;
-	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-}
-
-input[type="submit"]{
-	font-family: 'Syne';
-	font-weight: 700;
-	color: white;
-	background-color: #1D6154;
-	margin : 2em auto ;
-	width: 180px;
-	text-align: center;
-	border-radius: 60px ;
-	cursor: pointer;
 }
 
 /* headder */
@@ -248,10 +196,10 @@ footer nav ul {
 }
 
 .modale{
-	margin-top: -50px;
-	width: 100vw;
-	left: 0;
-	height: calc(100vh + 50px);
+	width: 100%;
+	max-width: 1140px;
+	min-width: 1024px;
+	height: 100vh;
 	position: fixed;
 	z-index: 100;
 	display: none;
@@ -271,34 +219,90 @@ footer nav ul {
 	align-items: center;
 }
 
-.edit-window .x-mark{
-	align-self: self-end;
-	width: 24px;
+.edit-window-btn{
+	width: 100%;
 	height: 24px;
 	display: flex;
 	align-items: center;
-	justify-content: center;
+	justify-content: space-between;
 }
-
-.edit-window .x-mark i{
-	font-size: 14px;
-}
-
-.edit-window .x-mark i:hover{
+.edit-window-btn i{
 	cursor: pointer;
+}
+.edit-window-btn i:hover{
 	color: rgb(209, 209, 209);
 }
-
+.edit-window .fa-arrow-left {
+	visibility: hidden; 
+	font-size: 18px;
+}
+.edit-window .fa-xmark {
+	font-size: 14px;
+}
 .edit-window h3{
 	margin-top: 0;
 	font-size: 26px;
 }
 
+.add-mode {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+#file { /* input */
+	display: none;
+}
+.file { /* label */
+	margin-top: -20px !important;
+	height: 130px;
+	padding: 20px;
+	background-color: #E8F1F6;
+	border-radius: 10px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	cursor: pointer;
+}
+.file:hover {
+	background-color: #B9C5CC;
+}
+.file:hover .btn{
+	background-color: #E8F1F6;
+}
+.file:hover :is(i, p){
+	color: #E8F1F6;
+}
+.file:hover .btn p{
+	color: #B9C5CC;
+}
+
+.file i {
+	font-size: 60px;
+	color: #B9C5CC;
+	margin: auto;
+}
+.file p {
+	color: #306685;
+	margin: 0;
+}
+.file .btn{
+	border-color: #B9C5CC !important; 
+	background-color: #B9C5CC;
+	width: 173px;
+	margin-bottom: 0!important;
+}
+.file .btn p{
+	color: #306685;
+}
+
+
 .delete-mode {
 	width: 100%;
 	height: 100%;
 	padding: 0 75px; /* !!! pourquoi ça marche pas ici? */
-	display: flex;
+	display: none;
 	flex-direction: column;
 	align-items: center;
 }
@@ -370,3 +374,65 @@ footer nav ul {
 	color: white;
 }
 
+/**** form login, contact, add-mode****/
+
+#login{
+	margin-top: 150px;
+}
+
+.formulaire {
+	width: 380px;
+	margin: auto;
+}
+
+.modale .formulaire {
+	width: 420px;
+}
+
+.formulaire > * {
+	text-align: center;
+}
+
+.formulaire h2 {
+	margin-bottom: 20px;
+}
+
+.formulaire form {
+	width: 100%;
+	text-align: left;
+	margin-top: 30px;
+	display: flex;
+	flex-direction: column;
+}
+
+.formulaire :is(input, select, option) {
+	font-size: 1.2em;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	padding: 15px;
+}
+
+
+
+.formulaire label {
+	margin: 2em 0 1em 0;
+}
+
+
+
+.formulaire textarea {
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+
+input[type="submit"]{
+	font-family: 'Syne';
+	font-weight: 700;
+	color: white;
+	background-color: #1D6154;
+	margin : 2em auto ;
+	width: 180px;
+	text-align: center;
+	border-radius: 60px ;
+	cursor: pointer;
+}

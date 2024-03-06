@@ -166,7 +166,7 @@ function loadWorks(){
 }
 
 
-document.querySelector('.x-mark').addEventListener("click", ()=>{editionMode()});
+document.querySelector('.fa-xmark').addEventListener("click", ()=>{editionMode()});
 document.querySelector('.editBtn').addEventListener("click", ()=>{editionMode()});
 document.querySelector('.logoutBtn').addEventListener("click", ()=>{logOut()});
 
