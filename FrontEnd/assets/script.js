@@ -6,6 +6,7 @@ try {
 
 const AUTH = await apiAuth()
 let EDITMODE = false;
+let ADDMODE = false;
 
 /* verify the token */
 async function apiAuth() {
@@ -69,6 +70,14 @@ function logOut(){
 function editionMode(){
     EDITMODE = EDITMODE? false : true;
     document.querySelector(".modale").style.display = EDITMODE?"flex":"none";
+    if (ADDMODE) {addMode()};
+};
+
+function addMode(){
+    ADDMODE = ADDMODE? false : true;
+    document.querySelector(".delete-mode").style.display = ADDMODE?"none":"flex";
+    document.querySelector(".add-mode").style.display = ADDMODE?"flex":"none";
+    document.querySelector(".fa-arrow-left").style.visibility = ADDMODE?"visible":"hidden";
 };
 
 /* add categories's buttons */
@@ -165,9 +174,15 @@ function loadWorks(){
     showWorks("Tous", deleteGallery);
 }
 
+/* ajout de l'image quand sélectionnée */
+/* bouton grisé */
+/* ajout fonction add work */
+
 
 document.querySelector('.fa-xmark').addEventListener("click", ()=>{editionMode()});
 document.querySelector('.editBtn').addEventListener("click", ()=>{editionMode()});
+document.querySelector('.fa-arrow-left').addEventListener("click", ()=>{addMode()});
+document.querySelector('.btn-addMode').addEventListener("click", ()=>{addMode()});
 document.querySelector('.logoutBtn').addEventListener("click", ()=>{logOut()});
 
 const gallery = document.querySelector(".gallery");
