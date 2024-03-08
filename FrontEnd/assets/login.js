@@ -1,6 +1,6 @@
 const form = document.getElementById('form');
 
-form.addEventListener('submit', async function (e)  {
+form.addEventListener('submit', async (e)=>{
     e.preventDefault();
 
     const email = document.getElementById('email').value;
@@ -31,3 +31,5 @@ form.addEventListener('submit', async function (e)  {
         console.error(error);
     });
 });
+
+/* if (AUTH){window.location.href = 'index.html';} */
