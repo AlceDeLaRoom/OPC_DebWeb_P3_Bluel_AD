@@ -275,7 +275,7 @@ footer nav ul {
 	color: #E8F1F6;
 }
 .file:hover .btn p{
-	color: #B9C5CC;
+	color: black;
 }
 
 .file i {
@@ -296,7 +296,10 @@ footer nav ul {
 .file .btn p{
 	color: #306685;
 }
-
+.file img{
+	margin-top: -20px;
+	min-height: 170px;
+}
 
 .delete-mode {
 	width: 100%;

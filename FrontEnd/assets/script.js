@@ -1,17 +1,11 @@
+// '!!!' restant?
+console.log("nouvelle page");
 
-let TOKEN = '';
-try {
-    TOKEN = JSON.parse(localStorage.getItem("token")).token;
-} catch(error){console.log(error)};
 
-const AUTH = await apiAuth()
-let EDITMODE = false;
-let ADDMODE = false;
-
-/* verify the token */
+/* API SECTION */
 async function apiAuth() {
     let auth = false;
-    await fetch("http://localhost:5678/api/users/auth", {
+    await fetch(APIURL + "users/auth", {
         headers: {
             'Authorization': "Bearer " + TOKEN
         }
@@ -24,47 +18,68 @@ async function apiAuth() {
     return auth;
 }
 
-async function apiGet() {
-    const response = await fetch("http://localhost:5678/api/works", {});
-    let data = await response.json();
-    // console.log ("données récupérées: ", data)
-    return data;
-};
-
-async function apiGetCategory(){
-    const response = await fetch("http://localhost:5678/api/categories", {});
-    let data = await response.json();
-    // console.log ("données récupérées: ", data)
+async function apiGet(endUrl){
+    let data ='';
+    await fetch(APIURL + endUrl, {})
+    .then(async (response) => {
+        if(response.ok) {
+            data = await response.json()
+        }else{
+            console.log("error")
+        };
+    })
+    .catch(error => {
+        console.error('There has been a problem with your fetch operation:', error);
+    });
     return data;
 };
 
 async function apiDelete(id){
-    await fetch('http://localhost:5678/api/works/'+id, {
+    await fetch(APIURL + 'works/' + id, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': "Bearer " + TOKEN
         }
     })
-    console.log("delete API")
-    
+    .then(response => {
+        if (response.ok) {refreshGaleries()} // !!! 
+        console.log(response);
+        })
+    .catch(error => {
+        console.error('There has been a problem with your fetch operation:', error);
+    });
 };
 
-function logIn(){
-    document.querySelector(".loginBtn").style.display = "none";
-    document.querySelector(".categories").style.display = "none";
-    document.querySelector(".logoutBtn").style.display = "block";
-    document.querySelector(".edition-banner").style.display = "flex";
-    document.querySelector(".editBtn").style.display = "flex";
+async function apiAdd(formData){
+    await fetch(APIURL + 'works', {
+        method: 'POST',
+        headers: {          
+            'Authorization': "Bearer " + TOKEN
+        },
+        body: formData})
+    .then((response) => {
+        if(response.ok) {
+            refreshGaleries()
+        }else{
+            console.log("error")
+        }
+    })
+    .catch((error) => {
+        console.error(error);
+    });
 };
 
-function logOut(){
-    document.querySelector(".loginBtn").style.display = "block";
-    document.querySelector(".categories").style.display = "flex";
-    document.querySelector(".logoutBtn").style.display = "none";
-    document.querySelector(".edition-banner").style.display = "none";
-    document.querySelector(".editBtn").style.display = "none";
-    localStorage.removeItem("token");
+
+/* NAVIGATION SECTION */
+function addNavEvent(){
+    const modale = document.querySelector('.modale'); 
+    modale.addEventListener("click", (e)=>{if (modale == e.target){editionMode()}});
+    document.querySelector('.fa-xmark').addEventListener("click", ()=>{editionMode()});
+    document.querySelector('.editBtn').addEventListener("click", ()=>{editionMode()});
+    document.querySelector('.fa-arrow-left').addEventListener("click", ()=>{addMode()});
+    document.querySelector('.btn-addMode').addEventListener("click", ()=>{addMode()});
+    document.querySelector('.logoutBtn').addEventListener("click", ()=>{LOGIN = false; logInOut()});    
 };
 
 function editionMode(){
@@ -78,120 +93,262 @@ function addMode(){
     document.querySelector(".delete-mode").style.display = ADDMODE?"none":"flex";
     document.querySelector(".add-mode").style.display = ADDMODE?"flex":"none";
     document.querySelector(".fa-arrow-left").style.visibility = ADDMODE?"visible":"hidden";
+    if (!ADDMODE) {refreshAddMode()};
 };
 
-/* add categories's buttons */
-function addButtonCategories(categories){
-    const categoriesDiv = document.createElement("div");
-	categoriesDiv.className = "categories";
-    categoriesDiv.appendChild(addBtn("Tous", " selected"));
-    for (const category of categories){
-        categoriesDiv.appendChild(addBtn(category.name));
+function logInOut(){
+    document.querySelector(".loginBtn").style.display = LOGIN?"none":"block";
+    document.querySelector(".categories").style.display = LOGIN?"none":"flex";
+    document.querySelector(".logoutBtn").style.display = LOGIN?"block":"none";
+    document.querySelector(".edition-banner").style.display = LOGIN?"flex":"none";
+    document.querySelector(".editBtn").style.display = LOGIN?"flex":"none";
+    if (!LOGIN) {localStorage.removeItem("token")};
+};
+
+
+/* FILTERS SECTION */
+function createAllFilterBtn(){
+    const filtersDiv = document.createElement("div");
+	filtersDiv.className = "categories";
+    filtersDiv.appendChild(filterBtn("Tous", " selected"));
+    for (const category of CATEGORIESARRAY){
+        filtersDiv.appendChild(filterBtn(category.name));
     };
-    return categoriesDiv;
+    return filtersDiv;
 };
 
-function addBtn(categorie, selectedBtn = ""){
+function filterBtn(categorie, selectedBtn = ""){
     const btnCat = document.createElement("div");
     btnCat.className = "btn" + selectedBtn;
     const txtBtn = document.createElement("p");
     txtBtn.innerHTML = categorie;
     btnCat.appendChild(txtBtn);
-    btnCat.addEventListener("click", ()=>{/selected/.test(btnCat.className)? console.log("Already selected!"):clicCat(btnCat)});
+    btnCat.addEventListener("click", ()=>{/selected/.test(btnCat.className)? console.log("Already selected!"):eventFilterBtn(btnCat)});
     return btnCat;
 };
 
-function clicCat(btn){
-    gallery.innerHTML = '';
-    showWorks(btn.firstChild.innerHTML);
-    const oldBtn = gallery.parentNode.querySelector(".selected");
+function eventFilterBtn(btn){
+    MAINGALLERY.innerHTML = '';
+    addWorksToGallery(btn.firstChild.innerHTML);
+    const oldBtn = MAINGALLERY.parentNode.querySelector(".selected");
     oldBtn.className = "btn";
     btn.className += " selected";
 };
 
-/* show work, category = "Tous" for all, don't forget to clean up gallery */
-function showWorks(category = "Tous" , contenor = gallery){
+
+/* GALLERIES SECTION */
+function refreshGaleries(){
+    MAINGALLERY.innerHTML = '';
+    DELETEGALLERY.innerHTML = '';
+    loadGaleries();
+};
+
+async function loadGaleries(){
+    WORKSARRAY = await apiGet("works");
+    addWorksToGallery();
+    addWorksToGallery("Tous", DELETEGALLERY);
+};
+
+function addWorksToGallery(category = "Tous" , contenor = MAINGALLERY){ // !!! retravailler cette fonction, utiliser les id des catégories
     if (/Tous/.test(category)) {
-        /*console.log("on affiche tout!")*/
-        for (const cat of categories){
-            showWorks(cat.name, contenor);
+        for (const cat of CATEGORIESARRAY){
+            addWorksToGallery(cat.name, contenor);
         }
     }
     else{
         category = category.replace(/&amp;/g,"&");
-        /*console.log("on affiche ", category, "dans ", contenor)*/
         const title = RegExp("delete").test(contenor.className)? false : true;
-        for (const work of works){
+        for (const work of WORKSARRAY){
             if (RegExp(category).test(work.category.name)){
                 contenor.appendChild(showOnework(work, title));
             };
         };
     };
-}
+};
 
 function showOnework(work, title = true){
-    /*console.log("Add work: ", work.title)*/
     const newWork = document.createElement("div");
     newWork.className = "work";
-    const img = document.createElement("img");
-    img.src = work.imageUrl;
-    img.alt = work.title;
-    newWork.appendChild(img);
+    const imgNewWork = document.createElement("img");
+    imgNewWork.src = work.imageUrl;
+    imgNewWork.alt = work.title;
+    newWork.appendChild(imgNewWork);
 
-    if (title){
+    if (title){ // add title for main gallery 
         const imgTitle = document.createElement("p");
         imgTitle.innerHTML = work.title;
         newWork.appendChild(imgTitle);
     }
-    else{
-        const btnIcon = document.createElement("div");
-        btnIcon.className = "btnTrashCan";
-        newWork.appendChild(btnIcon);
-        const icon = document.createElement("i");
-        icon.className = "fa-solid fa-trash-can";
-        btnIcon.appendChild(icon);
-        btnIcon.addEventListener("click", ()=>{deleteWork(work.id)});
+    else{ // add delete button for modale gallery
+        newWork.appendChild(createDeleteBtn(work.id));
     };
-
     return newWork;
-}
-
-function deleteWork(id){
-    apiDelete(id)
-    refreshWorks()
-    console.log("coucou")
-}
-
-function refreshWorks(){
-    gallery.innerHTML = '';
-    deleteGallery.innerHTML = '';
-    loadWorks();
-    console.log("on viens de refresh!")
 };
 
-function loadWorks(){
-    showWorks();
-    showWorks("Tous", deleteGallery);
+function createDeleteBtn(id){
+    const deleteBtn = document.createElement("div");
+    deleteBtn.className = "btnTrashCan";
+    const icon = document.createElement("i");
+    icon.className = "fa-solid fa-trash-can";
+    deleteBtn.appendChild(icon);
+    deleteBtn.addEventListener("click" , async (e) => {
+        e.preventDefault();
+        await apiDelete(id);
+    });
+    return deleteBtn
+};
+
+
+/* ADD SECTION */
+function setImageSelected(){
+    if (inputAdd.files.length == 1) {
+        labelAdd.innerHTML = '';
+        const imgAdd = document.createElement("img");
+        imgAdd.src = URL.createObjectURL(inputAdd.files[0])
+        labelAdd.appendChild(imgAdd);
+    };
+};
+
+function noImageSelected(){
+    
+};
+
+function refreshAddMode(){
+    // !!!
+};
+
+function lockBtnAdd(){
+     // !!!
+};
+
+/* CONSTANTS SECTION */
+
+const APIURL = "http://localhost:5678/api/";
+let TOKEN = '';
+let LOGIN = false;
+try {
+    TOKEN = JSON.parse(localStorage.getItem("token")).token;
+    LOGIN = await apiAuth();
+}catch(error){console.log("No token found!")};
+
+
+let WORKSARRAY = [];
+const CATEGORIESARRAY = await apiGet("categories");
+let EDITMODE = false;
+let ADDMODE = false;
+
+const MAINGALLERY = document.querySelector(".gallery");
+const DELETEGALLERY = document.querySelector(".delete-gallery");
+
+const inputAdd = document.querySelector("#file");
+const labelAdd = document.querySelector(".file");
+const addForm = document.getElementById('add-form');
+
+/* GENERATION HTML*/
+MAINGALLERY.parentNode.insertBefore(createAllFilterBtn(), MAINGALLERY.previousSibling);
+loadGaleries();
+
+/* ADD EVENTS SECTION */
+
+inputAdd.addEventListener("change", () => {setImageSelected()});
+addForm.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    
+    const title = document.getElementById('title').value;
+    const category = document.getElementById('category').value;
+    const file = document.getElementById('file').files[0];
+    
+    const formData  = new FormData();
+    formData.append("title", title);
+    formData.append("category", category);
+    formData.append("image", file);
+
+    await apiAdd(formData);
+
+},false);
+addNavEvent();
+// addDeleteEvent?
+// addFilterEvent?
+
+/* ARE WE LOGIN? */
+logInOut();
+
+
+
+/* refresh addmode 
+ bouton grisé 
+ redirection login>index si déjà log 
+ peaufiner le css (surtout les boutons) */
+
+/* 
+
+1 : Récupérer les works depuis l'api 
+a : Ajouter un then pour vérifier l'état de la réponse
+b: Si positif on récupérer les works, on affiche les works
+c : on catch l'erreur
+
+2 : Créer une fonction pour générer les works récupérer via l'api
+a : section, figure, img , title
+
+3 : Créer la barre noir, je suis connecté je l'affiche, je suis pas connecté j'affiche rien 
+a : Le code de la barre en noir est présente dans le HTML (display none)
+
+4 : Créer la modal pour ajouter un nouveau work
+a : J'ajout un work je ne recharge pas la page  
+b : 
+
+
+
+
+
+*/
+
+/*
+async function getWorks(){
+    await fetch(url)
+    .then((response) => {
+        // On vérifie si le statut est en code 200
+        if (response.ok) {
+            return response.json();
+        }
+    })
+    .then(function (works) {
+        genererwork(works);
+        document.querySelectorAll(".btn").forEach((button) => {
+            button.addEventListener("click", function () {
+                const category = this.dataset.category;
+                if (category == 0) {
+                    document.querySelector(".gallery").innerHTML = "";
+                    return genererwork(works);
+                }
+                const filterWorks = works.filter(
+                    (work) => work.categoryId == category
+                    );
+                    document.querySelector(".gallery").innerHTML = "";
+                    genererwork(filterWorks);
+                });
+            });
+        })
+        .catch(function (error) {
+        console.error(error);
+    });
+
 }
 
-/* ajout de l'image quand sélectionnée */
-/* bouton grisé */
-/* ajout fonction add work */
+function genererwork(works) {
+    for (let i = 0; i < works.length; i++) {
+        const sectionwork = document.querySelector(".gallery");
+        const workelement = document.createElement("figure");
+      const imageelement = document.createElement("img");
+      imageelement.src = works[i].imageUrl;
+      const nomelement = document.createElement("figcaption");
+      nomelement.innerText = works[i].title;
+      
+      sectionwork.appendChild(workelement);
+      workelement.appendChild(imageelement);
+      workelement.appendChild(nomelement);
+    }
+}
 
+*/
 
-document.querySelector('.fa-xmark').addEventListener("click", ()=>{editionMode()});
-document.querySelector('.editBtn').addEventListener("click", ()=>{editionMode()});
-document.querySelector('.fa-arrow-left').addEventListener("click", ()=>{addMode()});
-document.querySelector('.btn-addMode').addEventListener("click", ()=>{addMode()});
-document.querySelector('.logoutBtn').addEventListener("click", ()=>{logOut()});
-
-const gallery = document.querySelector(".gallery");
-const deleteGallery = document.querySelector(".delete-gallery");
-
-let categories = await apiGetCategory();
-gallery.parentNode.insertBefore(addButtonCategories(categories), gallery.previousSibling);
-
-let works = await apiGet();
-
-loadWorks();
-if (AUTH) {logIn();};
