@@ -121,7 +121,7 @@ li a:hover {
 }
 
 .categories .btn{
-	background-color: white !important; 
+	background-color: white!important; 
 	margin: 0 5px;
 }
 
@@ -137,11 +137,11 @@ li a:hover {
 	color: white;
 }
 
-.categories .selected, .categories .selected:hover{
+.btn[data-select="true"], .btn[data-select="true"]:hover{
 	background-color: #1D6154 !important;
 }
 
-.categories .selected p{
+.btn[data-select="true"] p{
 	color: white;
 }
 
@@ -177,7 +177,7 @@ li a:hover {
 	margin: auto 5px;
 }
 
-.gallery {
+.main-gallery {
 	width: 100%;
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
@@ -185,7 +185,7 @@ li a:hover {
 	grid-row-gap: 20px;
 }
 
-.gallery img {
+.main-gallery img {
 	width: 100%;
 }
 

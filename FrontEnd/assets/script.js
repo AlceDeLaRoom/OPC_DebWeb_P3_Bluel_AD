@@ -110,29 +110,32 @@ function logInOut(){
 function createAllFilterBtn(){
     const filtersDiv = document.createElement("div");
 	filtersDiv.className = "categories";
-    filtersDiv.appendChild(filterBtn("Tous", " selected"));
+    const allCaterories = {name: "Tous", id: 0}; // !!! classArray
+    filtersDiv.appendChild(filterBtn(allCaterories));
     for (const category of CATEGORIESARRAY){
-        filtersDiv.appendChild(filterBtn(category.name));
+        filtersDiv.appendChild(filterBtn(category));
     };
     return filtersDiv;
 };
 
-function filterBtn(categorie, selectedBtn = ""){
-    const btnCat = document.createElement("div");
-    btnCat.className = "btn" + selectedBtn;
-    const txtBtn = document.createElement("p");
-    txtBtn.innerHTML = categorie;
-    btnCat.appendChild(txtBtn);
-    btnCat.addEventListener("click", ()=>{/selected/.test(btnCat.className)? console.log("Already selected!"):eventFilterBtn(btnCat)});
-    return btnCat;
+function filterBtn(category){
+    const filtBtn = document.createElement("div");
+    filtBtn.className = "btn";
+    if (category.id == 0){filtBtn.dataset.select = true};
+    filtBtn.dataset.id = category.id;
+    const btnTxt = document.createElement("p");
+    btnTxt.innerHTML = category.name;
+    filtBtn.appendChild(btnTxt);
+    filtBtn.addEventListener("click", ()=>{filtBtn.dataset.select == true? console.log("Already selected!"):eventFilterBtn(filtBtn)});
+    return filtBtn;
 };
 
 function eventFilterBtn(btn){
     MAINGALLERY.innerHTML = '';
-    addWorksToGallery(btn.firstChild.innerHTML);
-    const oldBtn = MAINGALLERY.parentNode.querySelector(".selected");
-    oldBtn.className = "btn";
-    btn.className += " selected";
+    addWorksToGallery(MAINGALLERY, btn.dataset.id);
+    const oldBtn = MAINGALLERY.parentNode.querySelector('[data-select=true]');
+    oldBtn.dataset.select = false;
+    btn.dataset.select = true;
 };
 
 
@@ -145,28 +148,19 @@ function refreshGaleries(){
 
 async function loadGaleries(){
     WORKSARRAY = await apiGet("works");
-    addWorksToGallery();
-    addWorksToGallery("Tous", DELETEGALLERY);
+    addWorksToGallery(MAINGALLERY);
+    addWorksToGallery(DELETEGALLERY);
 };
 
-function addWorksToGallery(category = "Tous" , contenor = MAINGALLERY){ // !!! retravailler cette fonction, utiliser les id des catégories
-    if (/Tous/.test(category)) {
-        for (const cat of CATEGORIESARRAY){
-            addWorksToGallery(cat.name, contenor);
-        }
-    }
-    else{
-        category = category.replace(/&amp;/g,"&");
-        const title = RegExp("delete").test(contenor.className)? false : true;
-        for (const work of WORKSARRAY){
-            if (RegExp(category).test(work.category.name)){
-                contenor.appendChild(showOnework(work, title));
-            };
+function addWorksToGallery(gallery, categoryId = 0){
+    for (const work of WORKSARRAY){
+        if (categoryId == work.categoryId || categoryId == 0){
+            gallery.appendChild(setWork(work, RegExp("main").test(gallery.className)))
         };
     };
 };
 
-function showOnework(work, title = true){
+function setWork(work, maingallery){
     const newWork = document.createElement("div");
     newWork.className = "work";
     const imgNewWork = document.createElement("img");
@@ -174,18 +168,18 @@ function showOnework(work, title = true){
     imgNewWork.alt = work.title;
     newWork.appendChild(imgNewWork);
 
-    if (title){ // add title for main gallery 
+    if (maingallery){
         const imgTitle = document.createElement("p");
         imgTitle.innerHTML = work.title;
         newWork.appendChild(imgTitle);
     }
-    else{ // add delete button for modale gallery
-        newWork.appendChild(createDeleteBtn(work.id));
+    else{
+        newWork.appendChild(addDeleteBtn(work.id));
     };
     return newWork;
 };
 
-function createDeleteBtn(id){
+function addDeleteBtn(id){
     const deleteBtn = document.createElement("div");
     deleteBtn.className = "btnTrashCan";
     const icon = document.createElement("i");
@@ -232,12 +226,12 @@ try {
 }catch(error){console.log("No token found!")};
 
 
-let WORKSARRAY = [];
+let WORKSARRAY = []; // !!! utilité après avoir retravaillé addWorks to gallery
 const CATEGORIESARRAY = await apiGet("categories");
 let EDITMODE = false;
 let ADDMODE = false;
 
-const MAINGALLERY = document.querySelector(".gallery");
+const MAINGALLERY = document.querySelector(".main-gallery");
 const DELETEGALLERY = document.querySelector(".delete-gallery");
 
 const inputAdd = document.querySelector("#file");
@@ -279,76 +273,3 @@ logInOut();
  bouton grisé 
  redirection login>index si déjà log 
  peaufiner le css (surtout les boutons) */
-
-/* 
-
-1 : Récupérer les works depuis l'api 
-a : Ajouter un then pour vérifier l'état de la réponse
-b: Si positif on récupérer les works, on affiche les works
-c : on catch l'erreur
-
-2 : Créer une fonction pour générer les works récupérer via l'api
-a : section, figure, img , title
-
-3 : Créer la barre noir, je suis connecté je l'affiche, je suis pas connecté j'affiche rien 
-a : Le code de la barre en noir est présente dans le HTML (display none)
-
-4 : Créer la modal pour ajouter un nouveau work
-a : J'ajout un work je ne recharge pas la page  
-b : 
-
-
-
-
-
-*/
-
-/*
-async function getWorks(){
-    await fetch(url)
-    .then((response) => {
-        // On vérifie si le statut est en code 200
-        if (response.ok) {
-            return response.json();
-        }
-    })
-    .then(function (works) {
-        genererwork(works);
-        document.querySelectorAll(".btn").forEach((button) => {
-            button.addEventListener("click", function () {
-                const category = this.dataset.category;
-                if (category == 0) {
-                    document.querySelector(".gallery").innerHTML = "";
-                    return genererwork(works);
-                }
-                const filterWorks = works.filter(
-                    (work) => work.categoryId == category
-                    );
-                    document.querySelector(".gallery").innerHTML = "";
-                    genererwork(filterWorks);
-                });
-            });
-        })
-        .catch(function (error) {
-        console.error(error);
-    });
-
-}
-
-function genererwork(works) {
-    for (let i = 0; i < works.length; i++) {
-        const sectionwork = document.querySelector(".gallery");
-        const workelement = document.createElement("figure");
-      const imageelement = document.createElement("img");
-      imageelement.src = works[i].imageUrl;
-      const nomelement = document.createElement("figcaption");
-      nomelement.innerText = works[i].title;
-      
-      sectionwork.appendChild(workelement);
-      workelement.appendChild(imageelement);
-      workelement.appendChild(nomelement);
-    }
-}
-
-*/
-
