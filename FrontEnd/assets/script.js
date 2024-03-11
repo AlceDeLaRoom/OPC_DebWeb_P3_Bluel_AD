@@ -179,7 +179,7 @@ function setWork(work, maingallery){ // create one work depending of the selecte
         newWork.appendChild(imgTitle);
     }
     else{
-        newWork.appendChild(addDeleteBtn(work.id +10));
+        newWork.appendChild(addDeleteBtn(work.id));
     };
     return newWork;
 };
