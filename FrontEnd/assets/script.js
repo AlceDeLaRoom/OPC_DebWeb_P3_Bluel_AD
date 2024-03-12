@@ -99,7 +99,7 @@ function addEventListenerNav() { // set all the event listeners for the navigati
   document.querySelector(".fa-xmark").addEventListener("click", () => {
     editionMode();
   });
-  document.querySelector(".editBtn").addEventListener("click", () => {
+  document.querySelector(".accessEditBtn").addEventListener("click", () => {
     editionMode();
   });
   document.querySelector(".fa-arrow-left").addEventListener("click", () => {
@@ -122,8 +122,7 @@ function editionMode() { // open or close the modale windows
 
 function addMode() { // open or close the form for add a work
   ADDMODE = ADDMODE ? false : true;
-  document.querySelector(".delete-mode").style.display = ADDMODE
-    ? "none" : "flex";
+  document.querySelector(".delete-mode").style.display = ADDMODE ? "none" : "flex";
   document.querySelector(".add-mode").style.display = ADDMODE ? "flex" : "none";
   document.querySelector(".fa-arrow-left").style.visibility = ADDMODE ? "visible" : "hidden";
   ADDMODE ? null : refreshAddMode();
@@ -134,7 +133,7 @@ function logInOut() { // set the page depending on whether we are log or not
   document.querySelector(".filters").style.display = LOGIN ? "none" : "flex";
   document.querySelector(".logoutBtn").style.display = LOGIN ? "block" : "none";
   document.querySelector(".edition-banner").style.display = LOGIN ? "flex" : "none";
-  document.querySelector(".editBtn").style.display = LOGIN ? "flex" : "none";
+  document.querySelector(".accessEditBtn").style.display = LOGIN ? "flex" : "none";
   LOGIN ? null : localStorage.removeItem("token");
 }
 
@@ -242,8 +241,8 @@ function checkLockAddBtn() { // check if one value is empty inside the form
 
 function lockAddBtn(check) { // lock (if true) unlock (if false) the submit button
   const submitBtn = document.querySelector("#add-submit");
-  submitBtn.style.backgroundColor = check ? "#1D6154" : "grey";
-  submitBtn.style.borderColor = check ? "#1D6154" : "grey";
+  submitBtn.style.backgroundColor = check ? "#1D6154" : "#b9c5cc";
+  submitBtn.style.borderColor = check ? "#1D6154" : "#b9c5cc";
   submitBtn.style.cursor = check ? "pointer" : "auto";
   submitBtn.style.pointerEvents = check ? "all" : "none";
 }
