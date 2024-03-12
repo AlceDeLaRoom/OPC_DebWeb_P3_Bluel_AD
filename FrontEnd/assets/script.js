@@ -1,15 +1,15 @@
-// CONSTANTS SECTION
+// CONSTANTS SECTIONADDMODE
 const APIURL = "http://localhost:5678/api/";
 let TOKEN = "";
 let LOGIN = false;
 
-let WORKSARRAY = []; // used each time we click on the filter buttons
-let EDITMODE = false;
-let ADDMODE = false;
+let WORKS_ARRAY = []; // used each time we click on the filter buttons
+let EDIT_MODE = false;
+let Add_MODE = false;
 
 const FILTERS = document.querySelector(".filters");
-const MAINGALLERY = document.querySelector(".main-gallery");
-const DELETEGALLERY = document.querySelector(".delete-gallery");
+const MAIN_GALLERY = document.querySelector(".main-gallery");
+const DELETE_GALLERY = document.querySelector(".delete-gallery");
 
 const ADD_FORM = document.getElementById("add-form");
 const ORIGINAL_ADD_FORM = ADD_FORM.innerHTML;
@@ -115,17 +115,17 @@ function addEventListenerNav() { // set all the event listeners for the navigati
 }
 
 function editionMode() { // open or close the modale windows
-  EDITMODE = EDITMODE ? false : true;
-  document.querySelector(".modale").style.display = EDITMODE ? "flex" : "none";
-  ADDMODE ? addMode() : null;
+  EDIT_MODE = EDIT_MODE ? false : true;
+  document.querySelector(".modale").style.display = EDIT_MODE ? "flex" : "none";
+  Add_MODE ? addMode() : null;
 }
 
 function addMode() { // open or close the form for add a work
-  ADDMODE = ADDMODE ? false : true;
-  document.querySelector(".delete-mode").style.display = ADDMODE ? "none" : "flex";
-  document.querySelector(".add-mode").style.display = ADDMODE ? "flex" : "none";
-  document.querySelector(".fa-arrow-left").style.visibility = ADDMODE ? "visible" : "hidden";
-  ADDMODE ? null : refreshAddMode();
+  Add_MODE = Add_MODE ? false : true;
+  document.querySelector(".delete-mode").style.display = Add_MODE ? "none" : "flex";
+  document.querySelector(".add-mode").style.display = Add_MODE ? "flex" : "none";
+  document.querySelector(".fa-arrow-left").style.visibility = Add_MODE ? "visible" : "hidden";
+  Add_MODE ? null : refreshAddMode();
 }
 
 function logInOut() { // set the page depending on whether we are log or not
@@ -159,28 +159,28 @@ function filterBtn(category) { // create one filter button
 }
 
 function eventFilterBtn(btn) { // actions when we click on the filter buttons
-  MAINGALLERY.innerHTML = "";
-  addWorksToGallery(MAINGALLERY, btn.dataset.id);
-  const oldBtn = MAINGALLERY.parentNode.querySelector("[data-select=true]");
+  MAIN_GALLERY.innerHTML = "";
+  addWorksToGallery(MAIN_GALLERY, btn.dataset.id);
+  const oldBtn = MAIN_GALLERY.parentNode.querySelector("[data-select=true]");
   oldBtn.dataset.select = false;
   btn.dataset.select = true;
 }
 
 // GALLERIES SECTION
 function refreshGaleries() { // refresh both galleries
-  MAINGALLERY.innerHTML = "";
-  DELETEGALLERY.innerHTML = "";
+  MAIN_GALLERY.innerHTML = "";
+  DELETE_GALLERY.innerHTML = "";
   loadGaleries();
 }
 
 async function loadGaleries() { // load both galleries after getting the works
-  WORKSARRAY = await apiGet("works");
-  addWorksToGallery(MAINGALLERY);
-  addWorksToGallery(DELETEGALLERY);
+  WORKS_ARRAY = await apiGet("works");
+  addWorksToGallery(MAIN_GALLERY);
+  addWorksToGallery(DELETE_GALLERY);
 }
 
 function addWorksToGallery(gallery, categoryId = 0) { // add each work to the selected gallery depending of the category aimed
-  for (const work of WORKSARRAY) {
+  for (const work of WORKS_ARRAY) {
     if (categoryId == work.categoryId || categoryId == 0) {
       gallery.appendChild(
         setWork(work, RegExp("main").test(gallery.className))
@@ -231,20 +231,17 @@ function refreshAddMode() { // reset the form for add a work
 }
 
 function checkLockAddBtn() { // check if one value is empty inside the form
-  let values = ADD_FORM.querySelectorAll(".check-value");
-  let check = true;
-  values.forEach((o) => {
-    o.value ? null : (check = false);
+  let inputArray = ADD_FORM.querySelectorAll(".check-value");
+  let check = false;
+  inputArray.forEach((o) => {
+    o.value ? null : (check = true);
   });
   lockAddBtn(check);
 }
 
 function lockAddBtn(check) { // lock (if true) unlock (if false) the submit button
-  const submitBtn = document.querySelector("#add-submit");
-  submitBtn.style.backgroundColor = check ? "#1D6154" : "#b9c5cc";
-  submitBtn.style.borderColor = check ? "#1D6154" : "#b9c5cc";
-  submitBtn.style.cursor = check ? "pointer" : "auto";
-  submitBtn.style.pointerEvents = check ? "all" : "none";
+  const submitBtn = ADD_FORM.querySelector("input[type='submit']");
+  submitBtn.dataset.lock = check;
 }
 
 function addFormChangeEvent(e) { // actions when one value of the form is changing
@@ -288,7 +285,7 @@ ADD_FORM.addEventListener("submit", (e) => {
   e.preventDefault();
   addFormSubmitEvent();
 });
-DELETEGALLERY.addEventListener("click", async (e) => {
+DELETE_GALLERY.addEventListener("click", async (e) => {
   if (e.target.classList.contains("btnTrashCan")) {
     await apiDelete(e.target.dataset.id).then((r) => {
       r ? refreshGaleries() : null;
@@ -310,7 +307,7 @@ try {
   //LOGIN = await apiAuth();
   LOGIN = true;
 } catch (error) {
-  console.log("No token found!");
+  console.log("No valid token found!");
 }
 logInOut();
 

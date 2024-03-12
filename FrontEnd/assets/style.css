@@ -84,12 +84,9 @@ nav li a {
   cursor: pointer;
 }
 
-nav li .selected {
-  font-weight: bold;
-}
-
+nav li .selected,
 li a:hover {
-  color: #b1663c;
+  font-weight: bold;
 }
 
 .loginBtn {
@@ -156,7 +153,8 @@ li a:hover {
 
 .btn:hover,
 .filters .btn:hover {
-  background-color: #508a7f;
+  background-color: black;
+  border-color: black;
   color: #fffef8;
 }
 
@@ -164,6 +162,7 @@ li a:hover {
 .filters .btn[data-select="true"]:hover {
   background-color: #1d6154;
   color: #fffef8;
+  pointer-events: none;
 }
 
 .modale .btn {
@@ -232,12 +231,17 @@ input[type="submit"] {
   width: 175px;
 }
 
-#add-submit {
-  background-color: #b9c5cc;
-  border: 2px #b9c5cc solid;
-  cursor: auto;
-  pointer-events: none;
+input[data-lock="true"] {
+	background-color: #b9c5cc;
+	border: 2px #b9c5cc solid;
+	cursor: auto;
+	pointer-events: none;
 }
+
+input[data-lock="true"]:hover {
+	background-color: #b9c5cc;
+	border: 2px #b9c5cc solid;
+  }
 
 #file {/* input */  
   display: none;
@@ -314,7 +318,7 @@ input[type="submit"] {
 }
 
 .accessEditBtn:hover {
-  color: grey;
+  font-weight: bold;
 }
 
 .accessEditBtn * {
