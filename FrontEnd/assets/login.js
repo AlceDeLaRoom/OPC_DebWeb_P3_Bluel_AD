@@ -1,35 +1,19 @@
-const form = document.getElementById('form');
+import {api} from "./apiCtrl.js";
 
-form.addEventListener('submit', async (e)=>{
-    e.preventDefault();
+const FORM = document.getElementById("form");
 
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+FORM.addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-    const body = { email: email, password: password };
-    const bodyJson = JSON.stringify(body);
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-    // CRUD = CREATE (POST), READ (GET), UPDATE (PUT), DELETE (DELETE)
-    await fetch('http://localhost:5678/api/users/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: bodyJson
-    })
-    .then((response) => response.json())
-    .then((data) => {
-        if(data.token){
-            const responseData = JSON.stringify(data);
-            localStorage.setItem('token', responseData);
-            window.location.href = 'index.html';
-        }else{
-            alert('Identifiant ou mot de passe incorrect');
-        }
-    })
-    .catch((error) => {
-        console.error(error);
-    });
+  const body = { email: email, password: password };
+  const bodyJson = JSON.stringify(body);
+
+  await api.login(bodyJson);
 });
 
-/* if (AUTH){window.location.href = 'index.html';} */
+if (api.LOGIN) {
+  window.location.href = "index.html";
+}

@@ -1,7 +1,7 @@
-// CONSTANTS SECTIONADDMODE
-const APIURL = "http://localhost:5678/api/";
-let TOKEN = "";
-let LOGIN = false;
+import {api} from "./apiCtrl.js";
+
+// CONSTANTS SECTION
+let LOGIN = api.LOGIN;
 
 let WORKS_ARRAY = []; // used each time we click on the filter buttons
 let EDIT_MODE = false;
@@ -13,82 +13,6 @@ const DELETE_GALLERY = document.querySelector(".delete-gallery");
 
 const ADD_FORM = document.getElementById("add-form");
 const ORIGINAL_ADD_FORM = ADD_FORM.innerHTML;
-
-// API SECTION
-async function apiAuth() { // audit the token
-  let auth = false;
-  await fetch(APIURL + "users/auth", {
-    headers: {
-      Authorization: "Bearer " + TOKEN,
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      auth = data.auth;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  return auth;
-}
-
-async function apiGet(endUrl) { // get the works/categories
-  let data = "";
-  await fetch(APIURL + endUrl, {})
-    .then(async (response) => {
-      if (response.ok) {
-        data = await response.json();
-      } else {
-        console.log("error");
-      }
-    })
-    .catch((error) => {
-      console.error(
-        "There has been a problem with your fetch operation:",
-        error
-      );
-    });
-  return data;
-}
-
-async function apiDelete(id) { // remove one work from the database
-  let res = false;
-  await fetch(APIURL + "works/" + id, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + TOKEN,
-    },
-  })
-    .then((response) => {
-      response.ok ? (res = true) : console.log("error");
-    })
-    .catch((error) => {
-      console.error(
-        "There has been a problem with your fetch operation:",
-        error
-      );
-    });
-  return res;
-}
-
-async function apiAdd(formData) { // add one work to the ddarabase
-  let res = false;
-  await fetch(APIURL + "works", {
-    method: "POST",
-    headers: {
-      Authorization: "Bearer " + TOKEN,
-    },
-    body: formData,
-  })
-    .then((response) => {
-      response.ok ? (res = true) : console.log("error");
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  return res;
-}
 
 // NAVIGATION SECTION
 function addEventListenerNav() { // set all the event listeners for the navigation
@@ -141,7 +65,7 @@ function logInOut() { // set the page depending on whether we are log or not
 
 // FILTERS SECTION
 async function setAllFilterBtn() { // add all the filters buttons
-  const categoriesArray = await apiGet("categories");
+  const categoriesArray = await api.get("categories");
   const allCaterories = {name: "Tous", id: 0};
   FILTERS.appendChild(filterBtn(allCaterories));
   for (const category of categoriesArray) {
@@ -176,7 +100,7 @@ function refreshGaleries() { // refresh both galleries
 }
 
 async function loadGaleries() { // load both galleries after getting the works
-  WORKS_ARRAY = await apiGet("works");
+  WORKS_ARRAY = await api.get("works");
   addWorksToGallery(MAIN_GALLERY);
   addWorksToGallery(DELETE_GALLERY);
 }
@@ -267,7 +191,7 @@ function initFormData() { // create formData when we submit a new work
 }
 
 async function addFormSubmitEvent() { // actions when we submit a new work
-  await apiAdd(initFormData()).then((r) => {
+  await api.add(initFormData()).then((r) => {
     if (r) {
       refreshGaleries();
       addMode();
@@ -289,7 +213,7 @@ ADD_FORM.addEventListener("submit", (e) => {
 });
 DELETE_GALLERY.addEventListener("click", async (e) => {
   if (e.target.classList.contains("btnTrashCan")) {
-    await apiDelete(e.target.dataset.id).then((r) => {
+    await api.delete(e.target.dataset.id).then((r) => {
       r ? refreshGaleries() : null;
     });
   }
@@ -304,11 +228,4 @@ FILTERS.addEventListener("click", (e) => {
 addEventListenerNav();
 
 // everything is ready....wait!! Are we login?
-try {
-  TOKEN = JSON.parse(localStorage.getItem("token")).token;
-  //LOGIN = await apiAuth();
-  LOGIN = true;
-} catch (error) {
-  console.log("No valid token found!");
-}
 logInOut();
