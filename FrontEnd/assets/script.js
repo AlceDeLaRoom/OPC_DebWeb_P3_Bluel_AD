@@ -5,7 +5,7 @@ let LOGIN = false;
 
 let WORKS_ARRAY = []; // used each time we click on the filter buttons
 let EDIT_MODE = false;
-let Add_MODE = false;
+let ADD_MODE = false;
 
 const FILTERS = document.querySelector(".filters");
 const MAIN_GALLERY = document.querySelector(".main-gallery");
@@ -117,18 +117,20 @@ function addEventListenerNav() { // set all the event listeners for the navigati
 function editionMode() { // open or close the modale windows
   EDIT_MODE = EDIT_MODE ? false : true;
   document.querySelector(".modale").style.display = EDIT_MODE ? "flex" : "none";
-  Add_MODE ? addMode() : null;
+  ADD_MODE ? addMode() : null;
 }
 
 function addMode() { // open or close the form for add a work
-  Add_MODE = Add_MODE ? false : true;
-  document.querySelector(".delete-mode").style.display = Add_MODE ? "none" : "flex";
-  document.querySelector(".add-mode").style.display = Add_MODE ? "flex" : "none";
-  document.querySelector(".fa-arrow-left").style.visibility = Add_MODE ? "visible" : "hidden";
-  Add_MODE ? null : refreshAddMode();
+  ADD_MODE = ADD_MODE ? false : true;
+  document.querySelector(".delete-mode").style.display = ADD_MODE ? "none" : "flex";
+  document.querySelector(".add-mode").style.display = ADD_MODE ? "flex" : "none";
+  document.querySelector(".fa-arrow-left").style.visibility = ADD_MODE ? "visible" : "hidden";
+  ADD_MODE ? null : refreshAddMode();
 }
 
 function logInOut() { // set the page depending on whether we are log or not
+  console.log(document.querySelector("header"))
+  document.querySelector("header").style.paddingTop = LOGIN ? "60px" : "0";
   document.querySelector(".loginBtn").style.display = LOGIN ? "none" : "block";
   document.querySelector(".filters").style.display = LOGIN ? "none" : "flex";
   document.querySelector(".logoutBtn").style.display = LOGIN ? "block" : "none";
@@ -227,7 +229,7 @@ function setImageSelected(target) { // show the image when selected on the add m
 
 function refreshAddMode() { // reset the form for add a work
   ADD_FORM.innerHTML = ORIGINAL_ADD_FORM;
-  lockAddBtn(false);
+  lockAddBtn(true);
 }
 
 function checkLockAddBtn() { // check if one value is empty inside the form
@@ -310,6 +312,3 @@ try {
   console.log("No valid token found!");
 }
 logInOut();
-
-/* !!!   
-(redirection login>index si déjà log) */

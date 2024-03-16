@@ -1,23 +1,27 @@
 body {
+  display: flex;
+  flex-direction: column;
   min-width: 1024px;
+  max-width: 1240px;
   margin: auto;
   font-family: "Work Sans";
   font-size: 14px;
   background-color: #fffef8;
+  min-height: 100vh;
 }
 
 header,
 main,
-footer {
-  max-width: 1240px;
-}
-
-main {
-  margin: 0 150px;
+footer{
+  margin : 0 150px
 }
 
 section {
   margin: 50px 0;
+}
+
+a {
+  color: #306685;
 }
 
 h1 {
@@ -50,10 +54,11 @@ h3 {
 header {
   display: flex;
   justify-content: space-between;
-  margin: 30px 150px;
 }
 
 .edition-banner {
+  position: absolute;
+  left: 0;
   min-width: 1024px;
   width: 100vw;
   height: 60px;
@@ -229,6 +234,7 @@ li a:hover {
 input[type="submit"] {
   margin: 2em auto;
   width: 175px;
+  height: 38px;
 }
 
 input[data-lock="true"] {
@@ -403,7 +409,7 @@ input[data-lock="true"]:hover {
 }
 
 .delete-gallery {
-  padding: 20px 75px;
+  padding: 30px 75px;
   height: auto;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -431,6 +437,11 @@ input[data-lock="true"]:hover {
   cursor: pointer;
 }
 /* footer */
+
+footer {
+  margin-top: auto;
+}
+
 footer nav ul {
   display: flex;
   justify-content: flex-end;
